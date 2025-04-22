@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 86c76b659a09cb046816a6c4ed2188fa
+timeCreated: 1513792491
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 102087
+  packageName: five seven rigged
+  packageVersion: 1.0
+  assetPath: Assets/FN57/fn57_prefab.prefab
+  uploadId: 219901

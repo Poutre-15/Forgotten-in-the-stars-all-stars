@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 8f35cc634f3dfff49a8249263541907b
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: 625f186215c104763be7675aa2d941aa, type: 3}
+AssetOrigin:
+  serializedVersion: 1
+  productId: 269377
+  packageName: Ultimate Low Poly Home Equipment/Props
+  packageVersion: 1.0
+  assetPath: Assets/Low Poly home Equipment/URP/Texture/Common.shadergraph
+  uploadId: 625524

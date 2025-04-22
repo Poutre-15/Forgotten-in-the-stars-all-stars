@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: a0ee9ebc924e3354e82c1ee9c83232d6
+timeCreated: 1473588196
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 71374
+  packageName: old Kitchen Assets
+  packageVersion: 1.0
+  assetPath: Assets/old Kitchen/Lamp/Materials/DefaultMat.mat
+  uploadId: 136645
