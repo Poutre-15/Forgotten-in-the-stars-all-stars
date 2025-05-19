@@ -13,7 +13,7 @@ public class GunShoot : MonoBehaviour
             GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
             Rigidbody rb = bullet.GetComponent<Rigidbody>();
             rb.AddForce(firePoint.forward * bulletSpeed, ForceMode.Impulse);
-            Destroy(bullet, 3f); // Destroy bullet after 2 seconds
+            Destroy(bullet, 2f); // Destroy bullet after 2 seconds
         }
     }
 }
