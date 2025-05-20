@@ -18,6 +18,7 @@ public class EnemyAI : MonoBehaviour
     public int destinationAmount;
     public Vector3 rayCastOffset;
     public string deathScene;
+    public int health = 3;
 
     void Start()
     {
@@ -79,6 +80,19 @@ public class EnemyAI : MonoBehaviour
                 walking = false;
             }
         }
+            
+    }
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Bullet")) // If hit by bullet
+        {
+            health--;
+            Destroy(collision.gameObject); // Destroy bullet
+            if (health <= 0)
+            {
+                Destroy(gameObject); // Kill monster
+            }
+        }
     }
     IEnumerator stayIdle()
     {
@@ -102,4 +116,5 @@ public class EnemyAI : MonoBehaviour
         yield return new WaitForSeconds(jumpscareTime);
         SceneManager.LoadScene(deathScene);
     }
+
 }
