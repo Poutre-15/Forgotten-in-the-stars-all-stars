@@ -26,7 +26,6 @@ public class EnemyAI : MonoBehaviour
         walking = true;
         randNum = Random.Range(0, destinations.Count);
         currentDest = destinations[randNum];
-        cam.gameObject.SetActive(false);
     }
     void Update()//replace player by a player getter to find the nearest player ?
     {
@@ -54,8 +53,7 @@ public class EnemyAI : MonoBehaviour
             float distance = Vector3.Distance(player.position, ai.transform.position);
             if (distance <= catchDistance)
             {
-                cam.gameObject.SetActive(true);
-                cam.gameObject.SetActive(true);
+                
                 player.gameObject.SetActive(false);
                 aiAnim.ResetTrigger("walk");
                 aiAnim.ResetTrigger("idle");
@@ -63,7 +61,6 @@ public class EnemyAI : MonoBehaviour
                 aiAnim.SetTrigger("jumpscare");
                 StartCoroutine(deathRoutine());
                 chasing = false;
-                cam.gameObject.SetActive(false);
             }
         }
         if (walking == true)
