@@ -27269,7 +27269,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1138614929
 Transform:
   m_ObjectHideFlags: 0
@@ -29434,7 +29434,7 @@ MonoBehaviour:
   destinationAmount: 5
   rayCastOffset: {x: 0, y: 0, z: 0}
   deathScene: storage room
-  health: 3
+  health: 10
   cam: {fileID: 1138614928}
 --- !u!95 &1146078925 stripped
 Animator:
