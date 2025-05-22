@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: ad19d6cb0fb9de64589af8878c608449
+timeCreated: 1480891906
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 79873
+  packageName: Flamer
+  packageVersion: 1.0
+  assetPath: Assets/Flamer/Materials/flamer_gun.mat
+  uploadId: 159293
