@@ -19,6 +19,7 @@ public class EnemyAI : MonoBehaviour
     public Vector3 rayCastOffset;
     public string deathScene;
     public int health = 3;
+    public GameObject cam;
 
     void Start()
     {
@@ -26,7 +27,7 @@ public class EnemyAI : MonoBehaviour
         randNum = Random.Range(0, destinations.Count);
         currentDest = destinations[randNum];
     }
-    void Update()
+    void Update()//replace player by a player getter to find the nearest player ?
     {
         Vector3 direction = (player.position - transform.position).normalized;
         RaycastHit hit;
@@ -52,6 +53,7 @@ public class EnemyAI : MonoBehaviour
             float distance = Vector3.Distance(player.position, ai.transform.position);
             if (distance <= catchDistance)
             {
+                
                 player.gameObject.SetActive(false);
                 aiAnim.ResetTrigger("walk");
                 aiAnim.ResetTrigger("idle");
