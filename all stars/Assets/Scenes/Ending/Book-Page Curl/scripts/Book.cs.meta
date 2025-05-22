@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 6a0e685bb841df541a2b604410a1ab26
+guid: 4446b7192d8bf914ebaf797b64fe8b86
 timeCreated: 1454769561
 licenseType: Store
 MonoImporter:
@@ -25,5 +25,5 @@ AssetOrigin:
   productId: 55588
   packageName: Book - Page Curl
   packageVersion: 1.1
-  assetPath: Assets/Book-Page Curl/scripts/Book.cs
+  assetPath: Assets/Scenes/Ending/Book-Page Curl/scripts/Book.cs
   uploadId: 417589
