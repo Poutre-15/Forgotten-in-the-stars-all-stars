@@ -64,6 +64,7 @@
             {
                 "type": "System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                 "key": "editor.backFaceSelectEnabled",
                 "value": "{\"m_Value\":true}"
             },
@@ -87,6 +88,8 @@
                 "key": "SelectEdgeRing.selectIterative",
                 "value": "{\"m_Value\":false}"
 =======
+=======
+>>>>>>> Stashed changes
                 "key": "ShapeComponent.SettingsEnabled",
                 "value": "{\"m_Value\":false}"
             },
@@ -114,6 +117,9 @@
                 "type": "UnityEngine.ProBuilder.UnwrapParameters, Unity.ProBuilder, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
                 "key": "lightmapping.defaultLightmapUnwrapParameters",
                 "value": "{\"m_Value\":{\"m_HardAngle\":88.0,\"m_PackMargin\":20.0,\"m_AngleError\":8.0,\"m_AreaError\":15.0}}"
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
             },
             {
@@ -122,6 +128,7 @@
                 "value": "{\"m_Value\":4}"
             },
             {
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
                 "type": "UnityEngine.ProBuilder.RectSelectMode, Unity.ProBuilder, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
                 "key": "editor.dragSelectRectMode",
@@ -137,6 +144,8 @@
                 "key": "UVEditor.weldDistance",
                 "value": "{\"m_Value\":0.009999999776482582}"
 =======
+=======
+>>>>>>> Stashed changes
                 "type": "System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
                 "key": "ShapeBuilder.ActiveShapeIndex",
                 "value": "{\"m_Value\":6}"
@@ -180,6 +189,9 @@
                 "type": "UnityEngine.ProBuilder.Shapes.Shape, Unity.ProBuilder, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
                 "key": "ShapeBuilder.Cylinder",
                 "value": "{}"
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
             }
         ]
