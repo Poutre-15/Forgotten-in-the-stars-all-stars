@@ -5,15 +5,9 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: Assets/Scenes/SampleScene.unity
-    guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
     path: Assets/Scenes/Electrical Folder/wires/Enigma wires.unity
     guid: d8b9aeb239714ba499a705844a5cdc2c
-  - enabled: 0
-    path: Assets/Scenes/Electrical Folder/wires/Congratulation.unity
-    guid: d9b8d47a713c4324f83b7f00f54f0b0c
   - enabled: 1
     path: Assets/Scenes/Electrical Folder/wires/Game Over.unity
     guid: 99ea731f523a5774fbdc27b4c2ba969f
@@ -23,6 +17,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Start/Start.unity
     guid: b7972329ce64f4f4aa29eca4aa08dcd3
+  - enabled: 1
+    path: Assets/Scenes/Map finale/final.unity
+    guid: 4c42897e6cefffa4194c91bd3d9cf231
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
