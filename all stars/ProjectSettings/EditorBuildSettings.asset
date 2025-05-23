@@ -9,13 +9,13 @@ EditorBuildSettings:
     path: Assets/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
-    path: Assets/Scenes/Electrical Folder/Enigma wires.unity
+    path: Assets/Scenes/Electrical Folder/wires/Enigma wires.unity
     guid: d8b9aeb239714ba499a705844a5cdc2c
   - enabled: 0
-    path: Assets/Scenes/Electrical Folder/Congratulation.unity
+    path: Assets/Scenes/Electrical Folder/wires/Congratulation.unity
     guid: d9b8d47a713c4324f83b7f00f54f0b0c
   - enabled: 1
-    path: Assets/Scenes/Electrical Folder/Game Over.unity
+    path: Assets/Scenes/Electrical Folder/wires/Game Over.unity
     guid: 99ea731f523a5774fbdc27b4c2ba969f
   - enabled: 1
     path: Assets/Scenes/MainMenu_PUN.unity
