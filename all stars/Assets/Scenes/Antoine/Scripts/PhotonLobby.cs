@@ -13,7 +13,7 @@ public class TMP_PhotonLobby : MonoBehaviourPunCallbacks
     public UnityEngine.UI.Button btnJoin;
 
     [Header("Player Prefab")]
-    public string playerPrefabPath = "Prefabs/Player"; // Set in Inspector
+    public string playerPrefabPath = "Prefabs/FirstPersonController"; // Ensure this matches
 
     void Start()
     {
@@ -72,10 +72,19 @@ public class TMP_PhotonLobby : MonoBehaviourPunCallbacks
                 Debug.LogError("Scene index 3 not found in Build Settings");
             }
         }
-        // Instantiate player
         if (!string.IsNullOrEmpty(playerPrefabPath))
         {
-            PhotonNetwork.Instantiate(playerPrefabPath, Vector3.zero, Quaternion.identity);
+            // Verify prefab exists before instantiating
+            GameObject prefab = Resources.Load<GameObject>(playerPrefabPath);
+            if (prefab != null)
+            {
+                PhotonNetwork.Instantiate(playerPrefabPath, Vector3.zero, Quaternion.identity);
+                Debug.Log($"Instantiating player prefab: {playerPrefabPath}");
+            }
+            else
+            {
+                Debug.LogError($"Failed to load prefab at Resources/{playerPrefabPath}.prefab. Ensure it exists and is in a Resources folder.");
+            }
         }
         else
         {
@@ -83,7 +92,6 @@ public class TMP_PhotonLobby : MonoBehaviourPunCallbacks
         }
     }
 }
-
 
 
 
