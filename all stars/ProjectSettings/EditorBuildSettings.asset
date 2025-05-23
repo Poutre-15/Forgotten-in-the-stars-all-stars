@@ -17,6 +17,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Electrical Folder/Game Over.unity
     guid: 99ea731f523a5774fbdc27b4c2ba969f
+  - enabled: 1
+    path: Assets/Scenes/MainMenu_PUN.unity
+    guid: 83ab84c1bd90c7e479a235437b944929
+  - enabled: 1
+    path: Assets/Scenes/Start/Start.unity
+    guid: b7972329ce64f4f4aa29eca4aa08dcd3
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
