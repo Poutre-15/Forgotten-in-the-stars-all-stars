@@ -1494,6 +1494,7 @@ MonoBehaviour:
   inputCode: {fileID: 898474661}
   btnCreate: {fileID: 221523482}
   btnJoin: {fileID: 1262731350}
+  playerPrefabPath: Assets/Scenes/FirstPersonController.prefab
 --- !u!1 &1873881581
 GameObject:
   m_ObjectHideFlags: 0
