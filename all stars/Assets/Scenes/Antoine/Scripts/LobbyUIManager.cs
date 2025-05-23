@@ -32,7 +32,6 @@ public class LobbyUIManager : MonoBehaviour
     
     private void Awake()
     {
-        // Find required components
         lobbyManager = FindObjectOfType<LobbyManager>();
         networkManager = FindObjectOfType<NetworkManager>();
         
@@ -42,36 +41,29 @@ public class LobbyUIManager : MonoBehaviour
             return;
         }
         
-        // Setup UI button listeners
         SetupButtonListeners();
-        
-        // Subscribe to lobby events
+       
         SubscribeToLobbyEvents();
         
-        // Subscribe to network events
         SubscribeToNetworkEvents();
         
-        // Initialize UI state
         InitializeUI();
     }
     
     private void SetupButtonListeners()
     {
-        // Main menu buttons
         if (btnCreate != null)
             btnCreate.onClick.AddListener(OnCreateClicked);
             
         if (btnJoin != null)
             btnJoin.onClick.AddListener(OnJoinClicked);
             
-        // Lobby buttons
         if (btnLeaveLobby != null)
             btnLeaveLobby.onClick.AddListener(OnLeaveClicked);
             
         if (btnStartGame != null)
             btnStartGame.onClick.AddListener(OnStartGameClicked);
             
-        // Error panel button
         if (btnCloseError != null)
             btnCloseError.onClick.AddListener(OnCloseErrorClicked);
     }
@@ -97,14 +89,11 @@ public class LobbyUIManager : MonoBehaviour
     
     private void InitializeUI()
     {
-        // Show main menu by default
         ShowMainMenu();
         
-        // Hide loading and error panels
         SetLoadingState(false, "");
         SetErrorState(false, "");
         
-        // Initialize input field
         if (inputJoinCode != null)
         {
             inputJoinCode.text = "";
@@ -112,14 +101,12 @@ public class LobbyUIManager : MonoBehaviour
             inputJoinCode.onValueChanged.AddListener(OnJoinCodeChanged);
         }
         
-        // Clear lobby code display
         if (txtLobbyCode != null)
             txtLobbyCode.text = "";
     }
     
     private void OnJoinCodeChanged(string value)
     {
-        // Convert to uppercase automatically
         if (inputJoinCode != null && inputJoinCode.text != value.ToUpper())
         {
             inputJoinCode.text = value.ToUpper();
@@ -183,7 +170,6 @@ public class LobbyUIManager : MonoBehaviour
         ShowMainMenu();
         DisableMainMenuButtons(false);
         
-        // Clear lobby code
         if (txtLobbyCode != null)
             txtLobbyCode.text = "";
     }
@@ -194,7 +180,6 @@ public class LobbyUIManager : MonoBehaviour
         
         if (networkManager.IsHost)
         {
-            // Load the game scene
             LoadGameScene();
         }
         else
@@ -349,20 +334,16 @@ public class LobbyUIManager : MonoBehaviour
     
     private void LoadGameScene()
     {
-        // This would load your game scene
-        // For example: SceneManager.LoadScene("GameScene");
+        
         Debug.Log("Loading game scene...");
         
-        // You can use NetworkManager's scene management for synchronized scene loading
         if (networkManager.IsHost)
         {
-            // Example: networkManager.SceneManager.LoadScene("GameScene", LoadSceneMode.Single);
         }
     }
     
     private void OnDestroy()
     {
-        // Unsubscribe from events to prevent memory leaks
         if (lobbyManager != null)
         {
             lobbyManager.OnLobbyCreated -= OnLobbyCreated;

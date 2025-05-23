@@ -1,18 +1,14 @@
 using Unity.Netcode;
 using UnityEngine;
-using Unity.Collections;    // <-- nécessaire pour FixedString32Bytes
+using Unity.Collections;    
 
 
-/// <summary>
-/// Network behaviour for player objects in the lobby system
-/// This script should be attached to player prefabs that need to exist across the network
-/// </summary>
+
 public class PlayerNetworkBehaviour : NetworkBehaviour
 {
     [Header("Player Info")]
     [SerializeField] private string playerName = "Player";
     
-    // Network variables that sync across all clients
     private NetworkVariable<FixedString32Bytes> networkPlayerName = 
         new NetworkVariable<FixedString32Bytes>(
             "Player", 
@@ -27,7 +23,6 @@ public class PlayerNetworkBehaviour : NetworkBehaviour
             NetworkVariableWritePermission.Owner
         );
     
-    // Events for UI updates
     public static event System.Action<ulong, string> OnPlayerNameChanged;
     public static event System.Action<ulong, bool> OnPlayerReadyChanged;
     public static event System.Action<ulong> OnPlayerJoined;
@@ -35,17 +30,14 @@ public class PlayerNetworkBehaviour : NetworkBehaviour
     
     public override void OnNetworkSpawn()
     {
-        // Subscribe to network variable changes
         networkPlayerName.OnValueChanged += OnPlayerNameValueChanged;
         isReady.OnValueChanged += OnPlayerReadyValueChanged;
         
-        // Set initial player name if this is our player
         if (IsOwner)
         {
             SetPlayerNameServerRpc($"Player_{OwnerClientId}");
         }
         
-        // Notify that a player joined
         OnPlayerJoined?.Invoke(OwnerClientId);
         
         Debug.Log($"Player {OwnerClientId} spawned with name: {networkPlayerName.Value}");
@@ -53,11 +45,9 @@ public class PlayerNetworkBehaviour : NetworkBehaviour
     
     public override void OnNetworkDespawn()
     {
-        // Unsubscribe from network variable changes
         networkPlayerName.OnValueChanged -= OnPlayerNameValueChanged;
         isReady.OnValueChanged -= OnPlayerReadyValueChanged;
         
-        // Notify that a player left
         OnPlayerLeft?.Invoke(OwnerClientId);
         
         Debug.Log($"Player {OwnerClientId} despawned");
@@ -84,26 +74,22 @@ public class PlayerNetworkBehaviour : NetworkBehaviour
     [ServerRpc]
     public void SetPlayerNameServerRpc(string newName, ServerRpcParams rpcParams = default)
     {
-        // Validate that the RPC comes from the owner
         if (rpcParams.Receive.SenderClientId != OwnerClientId)
         {
             return;
         }
         
-        // Update the network variable
         networkPlayerName.Value = newName;
     }
     
     [ServerRpc]
     public void SetPlayerReadyServerRpc(bool ready, ServerRpcParams rpcParams = default)
     {
-        // Validate that the RPC comes from the owner
         if (rpcParams.Receive.SenderClientId != OwnerClientId)
         {
             return;
         }
         
-        // Update the network variable
         isReady.Value = ready;
     }
     
@@ -115,7 +101,6 @@ public class PlayerNetworkBehaviour : NetworkBehaviour
     public void NotifyGameStartingClientRpc()
     {
         Debug.Log("Game is starting!");
-        // Handle game start logic here
     }
     
     [ClientRpc]
@@ -123,7 +108,6 @@ public class PlayerNetworkBehaviour : NetworkBehaviour
     {
         Debug.Log($"Kicked from lobby: {reason}");
         
-        // Return to main menu
         if (NetworkManager.Singleton.IsClient)
         {
             NetworkManager.Singleton.Shutdown();
@@ -134,9 +118,7 @@ public class PlayerNetworkBehaviour : NetworkBehaviour
     
     #region Public Methods
     
-    /// <summary>
-    /// Set player name (only owner can call this)
-    /// </summary>
+    
     public void SetPlayerName(string newName)
     {
         if (!IsOwner)
@@ -148,9 +130,7 @@ public class PlayerNetworkBehaviour : NetworkBehaviour
         SetPlayerNameServerRpc(newName);
     }
     
-    /// <summary>
-    /// Set player ready state (only owner can call this)
-    /// </summary>
+    
     public void SetPlayerReady(bool ready)
     {
         if (!IsOwner)
@@ -162,37 +142,29 @@ public class PlayerNetworkBehaviour : NetworkBehaviour
         SetPlayerReadyServerRpc(ready);
     }
     
-    /// <summary>
-    /// Get player name
-    /// </summary>
+    
     public string GetPlayerName()
     {
         return networkPlayerName.Value.ToString();
     }
     
-    /// <summary>
-    /// Get player ready state
-    /// </summary>
+    
     public bool GetPlayerReady()
     {
         return isReady.Value;
     }
     
-    /// <summary>
-    /// Check if this player is the host
-    /// </summary>
+    
     public bool IsHost()
     {
-        return OwnerClientId == 0; // Host is always client ID 0
+        return OwnerClientId == 0;
     }
     
     #endregion
     
     #region Host-Only Methods
     
-    /// <summary>
-    /// Kick a player from the lobby (host only)
-    /// </summary>
+    
     public void KickPlayer(ulong clientId, string reason = "Kicked by host")
     {
         if (!NetworkManager.Singleton.IsHost)
@@ -201,21 +173,19 @@ public class PlayerNetworkBehaviour : NetworkBehaviour
             return;
         }
         
-        // Find the player to kick
+        
         if (NetworkManager.Singleton.ConnectedClients.TryGetValue(clientId, out var client))
         {
-            // Notify the player they're being kicked
+            
             var playerBehaviour = client.PlayerObject?.GetComponent<PlayerNetworkBehaviour>();
             playerBehaviour?.KickPlayerClientRpc(reason);
             
-            // Disconnect the client
+            
             NetworkManager.Singleton.DisconnectClient(clientId);
         }
     }
     
-    /// <summary>
-    /// Check if all players are ready (host only)
-    /// </summary>
+    
     public bool AreAllPlayersReady()
     {
         if (!NetworkManager.Singleton.IsHost)
@@ -235,9 +205,7 @@ public class PlayerNetworkBehaviour : NetworkBehaviour
         return true;
     }
     
-    /// <summary>
-    /// Start the game for all players (host only)
-    /// </summary>
+    
     public void StartGameForAllPlayers()
     {
         if (!NetworkManager.Singleton.IsHost)
@@ -246,15 +214,13 @@ public class PlayerNetworkBehaviour : NetworkBehaviour
             return;
         }
         
-        // Notify all players that the game is starting
         foreach (var client in NetworkManager.Singleton.ConnectedClients.Values)
         {
             var playerBehaviour = client.PlayerObject?.GetComponent<PlayerNetworkBehaviour>();
             playerBehaviour?.NotifyGameStartingClientRpc();
         }
         
-        // Load the game scene (example)
-        // NetworkManager.Singleton.SceneManager.LoadScene("GameScene", LoadSceneMode.Single);
+        
     }
     
     #endregion

@@ -2,10 +2,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
-/// <summary>
-/// Component for individual player entries in the lobby player list
-/// Attach this to your player entry prefab
-/// </summary>
+
 public class PlayerListEntry : MonoBehaviour
 {
     [Header("UI References")]
@@ -25,25 +22,19 @@ public class PlayerListEntry : MonoBehaviour
     private PlayerNetworkBehaviour playerBehaviour;
     private bool isHost;
     
-    /// <summary>
-    /// Initialize the player entry with client data
-    /// </summary>
+    
     public void Initialize(ulong clientId, PlayerNetworkBehaviour playerBehaviour)
     {
         this.clientId = clientId;
         this.playerBehaviour = playerBehaviour;
-        this.isHost = clientId == 0; // Host is always client ID 0
+        this.isHost = clientId == 0; 
         
-        // Setup kick button (only show for host and if this isn't the host's own entry)
         SetupKickButton();
         
-        // Initial display update
         UpdateDisplay(playerBehaviour);
     }
     
-    /// <summary>
-    /// Update the visual display of this player entry
-    /// </summary>
+    
     public void UpdateDisplay(PlayerNetworkBehaviour playerBehaviour)
     {
         if (playerBehaviour == null)
@@ -51,13 +42,10 @@ public class PlayerListEntry : MonoBehaviour
         
         this.playerBehaviour = playerBehaviour;
         
-        // Update player name
         UpdatePlayerName();
         
-        // Update ready status
         UpdateReadyStatus();
         
-        // Update host indicator
         UpdateHostIndicator();
     }
     
@@ -65,7 +53,6 @@ public class PlayerListEntry : MonoBehaviour
     {
         if (kickButton != null)
         {
-            // Only show kick button if we're the host and this isn't our own entry
             bool showKickButton = NetworkManager.Singleton.IsHost && clientId != NetworkManager.Singleton.LocalClientId;
             
             kickButton.gameObject.SetActive(showKickButton);
@@ -84,7 +71,6 @@ public class PlayerListEntry : MonoBehaviour
         {
             string playerName = playerBehaviour.GetPlayerName();
             
-            // Add host indicator to name if this is the host
             if (isHost)
             {
                 playerName += " [HOST]";
@@ -101,19 +87,16 @@ public class PlayerListEntry : MonoBehaviour
         
         bool isReady = playerBehaviour.GetPlayerReady();
         
-        // Update ready status text
         if (readyStatusText != null)
         {
             readyStatusText.text = isReady ? "Ready" : "Not Ready";
             readyStatusText.color = isReady ? readyColor : notReadyColor;
         }
         
-        // Update ready status icon
         if (readyStatusIcon != null)
         {
             readyStatusIcon.color = isReady ? readyColor : notReadyColor;
             
-            // Change sprite if available
             if (isReady && readySprite != null)
             {
                 readyStatusIcon.sprite = readySprite;
@@ -147,15 +130,13 @@ public class PlayerListEntry : MonoBehaviour
             return;
         }
         
-        // Show confirmation dialog (optional)
-        bool shouldKick = true; // You could implement a confirmation dialog here
+        bool shouldKick = true; 
         
         if (shouldKick && playerBehaviour != null)
         {
             string playerName = playerBehaviour.GetPlayerName();
             Debug.Log($"Kicking player: {playerName} (ID: {clientId})");
             
-            // Use the local player's reference to kick the target player
             var localPlayerBehaviour = NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerNetworkBehaviour>();
             if (localPlayerBehaviour != null)
             {
@@ -164,25 +145,19 @@ public class PlayerListEntry : MonoBehaviour
         }
     }
     
-    /// <summary>
-    /// Get the client ID associated with this entry
-    /// </summary>
+    
     public ulong GetClientId()
     {
         return clientId;
     }
     
-    /// <summary>
-    /// Get the player behaviour associated with this entry
-    /// </summary>
+    
     public PlayerNetworkBehaviour GetPlayerBehaviour()
     {
         return playerBehaviour;
     }
     
-    /// <summary>
-    /// Check if this entry represents the host
-    /// </summary>
+    
     public bool IsHost()
     {
         return isHost;

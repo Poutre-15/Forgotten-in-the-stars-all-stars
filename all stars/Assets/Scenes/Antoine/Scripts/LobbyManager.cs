@@ -23,21 +23,17 @@ public class LobbyManager : MonoBehaviour
     public NetworkManager networkManager;
     public UnityTransport unityTransport;
     
-    // Singleton pattern
     public static LobbyManager Instance { get; private set; }
     
-    // Current lobby data
     private Lobby currentLobby;
     private string currentLobbyCode;
     
-    // Events for UI updates
     public event Action<string> OnLobbyCreated;
     public event Action OnLobbyJoined;
     public event Action<string> OnLobbyError;
     
     private void Awake()
     {
-        // Singleton setup
         if (Instance == null)
         {
             Instance = this;
@@ -49,11 +45,9 @@ public class LobbyManager : MonoBehaviour
             return;
         }
         
-        // Get NetworkManager if not assigned
         if (networkManager == null)
             networkManager = FindObjectOfType<NetworkManager>();
             
-        // Get UnityTransport if not assigned
         if (unityTransport == null)
             unityTransport = FindObjectOfType<UnityTransport>();
     }
@@ -63,19 +57,15 @@ public class LobbyManager : MonoBehaviour
         await InitializeAsync();
     }
     
-    /// <summary>
-    /// Initialize Unity Services and authenticate anonymously
-    /// </summary>
+    
     public async Task InitializeAsync()
     {
         try
         {
             Debug.Log("Initializing Unity Services...");
             
-            // Initialize Unity Services
             await UnityServices.InitializeAsync();
             
-            // Sign in anonymously
             if (!AuthenticationService.Instance.IsSignedIn)
             {
                 await AuthenticationService.Instance.SignInAnonymouslyAsync();
@@ -90,26 +80,20 @@ public class LobbyManager : MonoBehaviour
             OnLobbyError?.Invoke($"Initialization failed: {e.Message}");
         }
     }
-    
-    /// <summary>
-    /// Create a new lobby with a generated code and start as host
-    /// </summary>
+   
     public async Task<string> CreateLobbyWithCodeAsync()
     {
         try
         {
             Debug.Log("Creating lobby...");
             
-            // Generate unique lobby code
             string lobbyCode = GenerateCode(CodeLength);
             
-            // Create Relay allocation for host
             Allocation allocation = await RelayService.Instance.CreateAllocationAsync(MaxPlayers - 1);
             string relayJoinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
             
             Debug.Log($"Relay allocation created. Join code: {relayJoinCode}");
             
-            // Create lobby with the generated code
             CreateLobbyOptions createLobbyOptions = new CreateLobbyOptions
             {
                 IsPrivate = false,
@@ -134,10 +118,8 @@ public class LobbyManager : MonoBehaviour
             
             Debug.Log($"Lobby created successfully! Code: {lobbyCode}");
             
-            // Configure Unity Transport with relay data
             ConfigureTransportAsHost(allocation);
             
-            // Start as host
             bool hostStarted = networkManager.StartHost();
             if (!hostStarted)
             {
@@ -146,7 +128,6 @@ public class LobbyManager : MonoBehaviour
             
             Debug.Log("Started as host successfully!");
             
-            // Start heartbeat to keep lobby alive
             StartLobbyHeartbeat();
             
             OnLobbyCreated?.Invoke(lobbyCode);
@@ -160,23 +141,18 @@ public class LobbyManager : MonoBehaviour
         }
     }
     
-    /// <summary>
-    /// Join an existing lobby using the provided code
-    /// </summary>
     public async Task JoinLobbyAsync(string code)
     {
         try
         {
             Debug.Log($"Attempting to join lobby with code: {code}");
             
-            // Join lobby by code
             JoinLobbyByCodeOptions joinOptions = new JoinLobbyByCodeOptions();
             currentLobby = await LobbyService.Instance.JoinLobbyByCodeAsync(code, joinOptions);
             currentLobbyCode = code;
             
             Debug.Log($"Successfully joined lobby: {currentLobby.Name}");
             
-            // Get relay join code from lobby data
             if (!currentLobby.Data.ContainsKey("RelayJoinCode"))
             {
                 throw new Exception("Lobby doesn't contain relay join code");
@@ -185,13 +161,10 @@ public class LobbyManager : MonoBehaviour
             string relayJoinCode = currentLobby.Data["RelayJoinCode"].Value;
             Debug.Log($"Retrieved relay join code: {relayJoinCode}");
             
-            // Join relay allocation
             JoinAllocation joinAllocation = await RelayService.Instance.JoinAllocationAsync(relayJoinCode);
             
-            // Configure Unity Transport with relay data
             ConfigureTransportAsClient(joinAllocation);
             
-            // Start as client
             bool clientStarted = networkManager.StartClient();
             if (!clientStarted)
             {
@@ -219,9 +192,7 @@ public class LobbyManager : MonoBehaviour
         }
     }
     
-    /// <summary>
-    /// Leave the current lobby and disconnect
-    /// </summary>
+   
     public async Task LeaveLobbyAsync()
     {
         try
@@ -246,9 +217,7 @@ public class LobbyManager : MonoBehaviour
         }
     }
     
-    /// <summary>
-    /// Generate a random alphanumeric code
-    /// </summary>
+  
     private string GenerateCode(int length)
     {
         const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -262,9 +231,7 @@ public class LobbyManager : MonoBehaviour
         return new string(result);
     }
     
-    /// <summary>
-    /// Configure Unity Transport for host with relay data
-    /// </summary>
+   
     private void ConfigureTransportAsHost(Allocation allocation)
     {
         var relayServerData = new RelayServerData(allocation, "dtls");
@@ -272,9 +239,7 @@ public class LobbyManager : MonoBehaviour
         Debug.Log("Transport configured as host with relay data");
     }
     
-    /// <summary>
-    /// Configure Unity Transport for client with relay data
-    /// </summary>
+  
     private void ConfigureTransportAsClient(JoinAllocation joinAllocation)
     {
         var relayServerData = new RelayServerData(joinAllocation, "dtls");
@@ -282,14 +247,12 @@ public class LobbyManager : MonoBehaviour
         Debug.Log("Transport configured as client with relay data");
     }
     
-    /// <summary>
-    /// Send periodic heartbeat to keep lobby alive
-    /// </summary>
+    
     private async void StartLobbyHeartbeat()
     {
         while (currentLobby != null && networkManager.IsHost)
         {
-            await Task.Delay(15000); // Send heartbeat every 15 seconds
+            await Task.Delay(15000); 
             
             if (currentLobby != null)
             {
@@ -307,17 +270,13 @@ public class LobbyManager : MonoBehaviour
         }
     }
     
-    /// <summary>
-    /// Get current lobby information
-    /// </summary>
+    
     public Lobby GetCurrentLobby()
     {
         return currentLobby;
     }
     
-    /// <summary>
-    /// Get current lobby code
-    /// </summary>
+   
     public string GetCurrentLobbyCode()
     {
         return currentLobbyCode;
