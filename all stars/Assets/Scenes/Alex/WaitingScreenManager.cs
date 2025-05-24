@@ -10,8 +10,7 @@ public class WaitingScreenManager : MonoBehaviourPunCallbacks
     public GameObject startButton; // Reference for enabling/disabling
 
     [Header("Scene Settings")]
-    public int gameplaySceneIndex = 3;
-    
+    public int dialogueSceneIndex = 4; // Dialogue scene index
 
     void Start()
     {
@@ -26,8 +25,17 @@ public class WaitingScreenManager : MonoBehaviourPunCallbacks
             return;
         }
 
+        Debug.Log($"IsMasterClient: {PhotonNetwork.IsMasterClient}, NetworkClientState: {PhotonNetwork.NetworkClientState}");
         UpdateUI();
         startButton.SetActive(PhotonNetwork.IsMasterClient);
+        if (PhotonNetwork.IsMasterClient && startButton.activeSelf)
+        {
+            Debug.Log("Start button enabled for Master Client");
+        }
+        else
+        {
+            Debug.LogWarning("Start button not enabled: Not Master Client or button inactive");
+        }
     }
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
@@ -42,28 +50,45 @@ public class WaitingScreenManager : MonoBehaviourPunCallbacks
 
     public override void OnMasterClientSwitched(Player newMasterClient)
     {
+        Debug.Log($"Master Client switched to {newMasterClient.NickName}");
         startButton.SetActive(PhotonNetwork.IsMasterClient);
+        if (PhotonNetwork.IsMasterClient)
+        {
+            Debug.Log("Start button enabled for new Master Client");
+        }
     }
 
     void UpdateUI()
     {
-        waitingText.text = $"Waiting for Players: {PhotonNetwork.PlayerList.Length}/{PhotonNetwork.CurrentRoom.MaxPlayers}";
+        if (waitingText != null)
+        {
+            waitingText.text = $"Waiting for Players: {PhotonNetwork.PlayerList.Length}/{PhotonNetwork.CurrentRoom.MaxPlayers}";
+        }
     }
 
     public void OnStartButtonClicked()
     {
-        Debug.Log("Start button clicked");
+        Debug.Log("OnStartButtonClicked called");
+        if (!PhotonNetwork.IsConnectedAndReady)
+        {
+            Debug.LogError("Cannot load scene: Not connected to Photon Master Server");
+            return;
+        }
         if (PhotonNetwork.IsMasterClient)
         {
-            Debug.Log($"Master Client loading gameplay scene index {gameplaySceneIndex}");
-            if (UnityEngine.SceneManagement.SceneManager.sceneCountInBuildSettings > gameplaySceneIndex)
+            Debug.Log($"Master Client loading dialogue scene index {dialogueSceneIndex}");
+            if (UnityEngine.SceneManagement.SceneManager.sceneCountInBuildSettings > dialogueSceneIndex)
             {
-                PhotonNetwork.LoadLevel(gameplaySceneIndex);
+                PhotonNetwork.LoadLevel(dialogueSceneIndex);
             }
             else
             {
-                Debug.LogError($"Gameplay scene index {gameplaySceneIndex} not found in Build Settings", this);
+                Debug.LogError($"Dialogue scene index {dialogueSceneIndex} not found in Build Settings", this);
             }
+        }
+        else
+        {
+            Debug.LogWarning("OnStartButtonClicked: Not Master Client, ignoring");
         }
     }
 }
