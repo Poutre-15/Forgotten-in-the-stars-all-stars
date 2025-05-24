@@ -15,8 +15,8 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu_PUN.unity
     guid: 83ab84c1bd90c7e479a235437b944929
   - enabled: 1
-    path: Assets/Scenes/Start/Waiting scene.unity
-    guid: f787d96f99e6a7f41a091b9e7d6627bb
+    path: Assets/Scenes/Start/Waiting.unity
+    guid: ef6dc5a9980d7cc4b9f328604c422d98
   - enabled: 1
     path: Assets/Scenes/Start/Start.unity
     guid: b7972329ce64f4f4aa29eca4aa08dcd3
