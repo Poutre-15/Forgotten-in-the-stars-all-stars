@@ -6,11 +6,8 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Electrical Folder/wires/Enigma wires.unity
-    guid: d8b9aeb239714ba499a705844a5cdc2c
-  - enabled: 1
-    path: Assets/Scenes/Electrical Folder/wires/Game Over.unity
-    guid: 99ea731f523a5774fbdc27b4c2ba969f
+    path: Assets/Scenes/Start/NewMenu.unity
+    guid: 8445c4c784fb540428a52077d8b6c85d
   - enabled: 1
     path: Assets/Scenes/Start/MainMenu_PUN.unity
     guid: 83ab84c1bd90c7e479a235437b944929
@@ -23,6 +20,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/FINAL MAP/final.unity
     guid: e0874cd5a4fed4a51b963dec915c65df
+  - enabled: 1
+    path: Assets/Scenes/Electrical Folder/wires/Enigma wires.unity
+    guid: d8b9aeb239714ba499a705844a5cdc2c
+  - enabled: 1
+    path: Assets/Scenes/Electrical Folder/wires/Game Over.unity
+    guid: 99ea731f523a5774fbdc27b4c2ba969f
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
