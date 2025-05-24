@@ -8,4 +8,5 @@ public class OnMouseDownExample : MonoBehaviour
     {
         SceneManager.LoadSceneAsync(2);
     }
+    
 }
