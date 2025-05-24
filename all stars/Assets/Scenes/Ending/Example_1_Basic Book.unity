@@ -138,7 +138,7 @@ PrefabInstance:
     - target: {fileID: 11415212, guid: fe9bfb5044c0cc646baba1ad7d354100, type: 3}
       propertyPath: 'bookPages.Array.data[0]'
       value: 
-      objectReference: {fileID: 21300000, guid: 1e933af438232f644a3d510b2f332a47, type: 3}
+      objectReference: {fileID: 21300000, guid: 697d3dbef52e9ac47abab80fb4024c8b, type: 3}
     - target: {fileID: 22443772, guid: fe9bfb5044c0cc646baba1ad7d354100, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -535,7 +535,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: b38f1555bc2bc5246a7c1a87e231e51c, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 19d1e24b54a173747a55874c8328ee4e, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
