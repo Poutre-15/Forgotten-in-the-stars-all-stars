@@ -8,8 +8,10 @@ public class WaitingScreenManager : MonoBehaviourPunCallbacks
     [Header("UI References")]
     public TMP_Text waitingText;
     public GameObject startButton; // Reference for enabling/disabling
-    public GameObject canva;
-    
+
+    [Header("Scene Settings")]
+    public int gameplaySceneIndex = 3;
+
     void Start()
     {
         if (waitingText == null)
@@ -52,7 +54,15 @@ public class WaitingScreenManager : MonoBehaviourPunCallbacks
         Debug.Log("Start button clicked");
         if (PhotonNetwork.IsMasterClient)
         {
-            canva.SetActive(true);
+            Debug.Log($"Master Client loading gameplay scene index {gameplaySceneIndex}");
+            if (UnityEngine.SceneManagement.SceneManager.sceneCountInBuildSettings > gameplaySceneIndex)
+            {
+                PhotonNetwork.LoadLevel(gameplaySceneIndex);
+            }
+            else
+            {
+                Debug.LogError($"Gameplay scene index {gameplaySceneIndex} not found in Build Settings", this);
+            }
         }
     }
 }
