@@ -11,6 +11,7 @@ public class WaitingScreenManager : MonoBehaviourPunCallbacks
 
     [Header("Scene Settings")]
     public int gameplaySceneIndex = 3;
+    
 
     void Start()
     {
