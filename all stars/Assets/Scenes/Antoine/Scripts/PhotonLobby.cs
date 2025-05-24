@@ -12,8 +12,8 @@ public class TMP_PhotonLobby : MonoBehaviourPunCallbacks
     public UnityEngine.UI.Button btnCreate;
     public UnityEngine.UI.Button btnJoin;
 
-    [Header("Player Prefab")]
-    public string playerPrefabPath = "Prefabs/FirstPersonController"; // Ensure this matches
+    [Header("Scene Settings")]
+    public int intermediateSceneIndex = 2; // Set to your intermediate scene index in Build Settings
 
     void Start()
     {
@@ -62,39 +62,18 @@ public class TMP_PhotonLobby : MonoBehaviourPunCallbacks
         Debug.Log("Joined room: " + PhotonNetwork.CurrentRoom.Name + ", Players: " + PhotonNetwork.PlayerList.Length);
         if (PhotonNetwork.IsMasterClient)
         {
-            Debug.Log("Master Client loading scene index 3");
-            if (SceneManager.sceneCountInBuildSettings > 3)
+            Debug.Log($"Master Client loading intermediate scene index {intermediateSceneIndex}");
+            if (SceneManager.sceneCountInBuildSettings > intermediateSceneIndex)
             {
-                PhotonNetwork.LoadLevel(3);
+                PhotonNetwork.LoadLevel(intermediateSceneIndex);
             }
             else
             {
-                Debug.LogError("Scene index 3 not found in Build Settings");
+                Debug.LogError($"Intermediate scene index {intermediateSceneIndex} not found in Build Settings");
             }
-        }
-        if (!string.IsNullOrEmpty(playerPrefabPath))
-        {
-            // Verify prefab exists before instantiating
-            GameObject prefab = Resources.Load<GameObject>(playerPrefabPath);
-            if (prefab != null)
-            {
-                PhotonNetwork.Instantiate(playerPrefabPath, Vector3.zero, Quaternion.identity);
-                Debug.Log($"Instantiating player prefab: {playerPrefabPath}");
-            }
-            else
-            {
-                Debug.LogError($"Failed to load prefab at Resources/{playerPrefabPath}.prefab. Ensure it exists and is in a Resources folder.");
-            }
-        }
-        else
-        {
-            Debug.LogError("Player prefab path is not set in PhotonLobby");
         }
     }
 }
-
-
-
 
 
 
