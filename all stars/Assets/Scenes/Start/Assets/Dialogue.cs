@@ -61,7 +61,7 @@ public class Dialogue : MonoBehaviour
         }
         else
         {
-            SceneManager.LoadSceneAsync(4);
+            SceneManager.LoadSceneAsync(5);
         }
     }
 }
