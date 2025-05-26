@@ -2,36 +2,37 @@ using UnityEngine;
 using Photon.Pun;
 using TMPro;
 
-public class KeypadInteract : MonoBehaviourPun // Changed to MonoBehaviourPun
+public class KeypadInteract : MonoBehaviourPun
 {
-    [SerializeField] private GameObject keypadUI; // Reference to local player's keypad UI
-    [SerializeField] private TextMeshProUGUI displayText; // Code display
-    [SerializeField] private string correctCode = "1234"; // Set your correct code
+    [SerializeField] private GameObject keypadUI;
+    [SerializeField] private TextMeshProUGUI displayText;
+    [SerializeField] private string correctCode = "5933";
     private string enteredCode = "";
     private bool isKeypadActive = false;
+    public GameObject objectToRotate;
+    [SerializeField] private float interactDistance = 3f;
+    private Transform player;
+    [SerializeField] private string playerObjectName = "ActivationObject";
+    private FirstPersonController playerController; // Reference to FirstPersonController
 
     void Start()
     {
-        // Ensure keypad UI is hidden at start
         keypadUI.SetActive(false);
+        player = GameObject.FindGameObjectWithTag("Player").transform;
+        playerController = player.GetComponent<FirstPersonController>(); // Get reference
     }
 
     void Update()
     {
-        // Only local player can interact
-        if (photonView.IsMine && Input.GetMouseButtonDown(0))
-        {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
+        if (!photonView.IsMine) return;
 
-            if (Physics.Raycast(ray, out hit) && hit.transform == transform)
-            {
-                ToggleKeypad();
-            }
+        float distance = Vector3.Distance(player.position, transform.position);
+        if (distance <= interactDistance && Input.GetKeyDown(KeyCode.E))
+        {
+            ToggleKeypad();
         }
 
-        // Close keypad with Escape key
-        if (isKeypadActive && photonView.IsMine && Input.GetKeyDown(KeyCode.Escape))
+        if (isKeypadActive && Input.GetKeyDown(KeyCode.Escape))
         {
             ToggleKeypad();
         }
@@ -39,21 +40,26 @@ public class KeypadInteract : MonoBehaviourPun // Changed to MonoBehaviourPun
 
     private void ToggleKeypad()
     {
-        if (photonView.IsMine) // Only local player toggles UI
-        {
-            isKeypadActive = !isKeypadActive;
-            keypadUI.SetActive(isKeypadActive);
-            Cursor.lockState = isKeypadActive ? CursorLockMode.None : CursorLockMode.Locked;
-            Cursor.visible = isKeypadActive;
+        if (!photonView.IsMine) return;
 
-            if (!isKeypadActive)
-            {
-                enteredCode = "";
-                UpdateDisplay();
-            }
+        isKeypadActive = !isKeypadActive;
+        keypadUI.SetActive(isKeypadActive);
+        Cursor.lockState = isKeypadActive ? CursorLockMode.None : CursorLockMode.Locked;
+        Cursor.visible = isKeypadActive;
+
+        // Toggle camera movement and cursor in FirstPersonController
+        if (playerController != null)
+        {
+            playerController.ToggleCameraForKeypad(isKeypadActive);
+        }
+
+        if (!isKeypadActive)
+        {
+            enteredCode = "";
+            UpdateDisplay();
         }
     }
-
+    
     public void OnNumberButtonPressed(string number)
     {
         if (photonView.IsMine && enteredCode.Length < correctCode.Length)
@@ -113,6 +119,37 @@ public class KeypadInteract : MonoBehaviourPun // Changed to MonoBehaviourPun
     private void RPC_CodeSuccess()
     {
         Debug.Log("Code accepted on all clients!");
-        // Add your success logic here (e.g., open door, trigger event)
+        RotateObject();
+        ActivateGun(); // Activate object in player prefab
     }
+
+    void RotateObject()
+    {
+        photonView.RPC("RotateObjectRPC", RpcTarget.All);
+    }
+
+    [PunRPC]
+    void RotateObjectRPC()
+    {
+        objectToRotate.transform.rotation = Quaternion.Euler(0, -40, 0);
+    }
+
+    [PunRPC]
+    void ActivateGun()
+    {
+        GameObject playerObj = PhotonNetwork.LocalPlayer.TagObject as GameObject;
+        if (playerObj != null)
+        {
+            GameObject targetObject = playerObj.transform.Find(playerObjectName)?.gameObject;
+            if (targetObject != null)
+            {
+                targetObject.SetActive(true);
+            }
+            else
+            {
+                Debug.LogError("ActivationObject not found in player prefab!");
+            }
+        }
+    }
+   
 }

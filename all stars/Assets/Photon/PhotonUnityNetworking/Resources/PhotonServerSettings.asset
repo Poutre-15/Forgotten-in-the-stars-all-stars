@@ -43,6 +43,12 @@ MonoBehaviour:
   - IncrementButtonCount
   - KillPlayer
   - TakeDamage
+  - RPC_ClearCode
+  - RPC_CodeSuccess
+  - RPC_NumberPressed
+  - RotateObjectRPC
+  - ActivatePlayerObject
+  - ActivateGun
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

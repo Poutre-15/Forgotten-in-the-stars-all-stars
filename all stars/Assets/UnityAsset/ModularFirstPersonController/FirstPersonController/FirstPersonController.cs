@@ -131,6 +131,7 @@ public class FirstPersonController : MonoBehaviourPun // Changed to MonoBehaviou
     private float timer = 0;
 
     #endregion
+    private bool isKeypadActive = false; // Track keypad state
 
     private void Awake()
     {
@@ -215,6 +216,25 @@ public class FirstPersonController : MonoBehaviourPun // Changed to MonoBehaviou
     private void Update()
     {
         if (!photonView.IsMine) return; // Only local player processes input
+
+        if (!isKeypadActive) // Only process camera movement if keypad is not active
+        {
+            if (cameraCanMove)
+            {
+                yaw = transform.localEulerAngles.y + Input.GetAxis("Mouse X") * mouseSensitivity;
+                if (!invertCamera)
+                {
+                    pitch -= mouseSensitivity * Input.GetAxis("Mouse Y");
+                }
+                else
+                {
+                    pitch += mouseSensitivity * Input.GetAxis("Mouse Y");
+                }
+                pitch = Mathf.Clamp(pitch, -maxLookAngle, maxLookAngle);
+                transform.localEulerAngles = new Vector3(0, yaw, 0);
+                playerCamera.transform.localEulerAngles = new Vector3(pitch, 0, 0);
+            }
+        }
 
         #region Camera
         if (cameraCanMove)
@@ -330,6 +350,14 @@ public class FirstPersonController : MonoBehaviourPun // Changed to MonoBehaviou
         {
             HeadBob();
         }
+    }
+    public void ToggleCameraForKeypad(bool keypadActive)
+    {
+        isKeypadActive = keypadActive;
+        cameraCanMove = !keypadActive;
+        lockCursor = !keypadActive;
+        Cursor.lockState = keypadActive ? CursorLockMode.None : CursorLockMode.Locked;
+        Cursor.visible = keypadActive;
     }
 
     void FixedUpdate()
