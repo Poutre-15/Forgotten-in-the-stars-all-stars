@@ -7,6 +7,7 @@ public class Button : MonoBehaviour, IInteractable
 
     private bool _isPressed = false;
     public bool IsPressed => _isPressed;
+    public object onClick { get; set; }
 
     public bool Interact(Interactor interactor)
     {

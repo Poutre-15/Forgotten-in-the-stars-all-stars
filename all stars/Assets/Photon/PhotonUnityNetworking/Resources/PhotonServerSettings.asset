@@ -39,9 +39,10 @@ MonoBehaviour:
   - DestroySpaceship
   - Fire
   - RespawnSpaceship
-  - RPC_ClearCode
-  - RPC_CodeSuccess
-  - RPC_NumberPressed
+  - SyncCrouch
+  - IncrementButtonCount
+  - KillPlayer
+  - TakeDamage
   DisableAutoOpenWizard: 1
-  ShowSettings: 0
+  ShowSettings: 1
   DevRegionSetOnce: 1

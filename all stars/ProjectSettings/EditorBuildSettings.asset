@@ -5,24 +5,30 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: Assets/Scenes/SampleScene.unity
-    guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/Scenes/Start/NewMenu.unity
+    guid: 8445c4c784fb540428a52077d8b6c85d
+  - enabled: 1
+    path: Assets/Scenes/Start/MainMenu_PUN.unity
+    guid: 83ab84c1bd90c7e479a235437b944929
+  - enabled: 1
+    path: Assets/Scenes/Start/Waiting.unity
+    guid: ef6dc5a9980d7cc4b9f328604c422d98
+  - enabled: 1
+    path: Assets/Scenes/Start/Start.unity
+    guid: b7972329ce64f4f4aa29eca4aa08dcd3
+  - enabled: 1
+    path: Assets/Scenes/FINAL MAP/final.unity
+    guid: e0874cd5a4fed4a51b963dec915c65df
   - enabled: 1
     path: Assets/Scenes/Electrical Folder/wires/Enigma wires.unity
     guid: d8b9aeb239714ba499a705844a5cdc2c
-  - enabled: 0
-    path: Assets/Scenes/Electrical Folder/wires/Congratulation.unity
-    guid: d9b8d47a713c4324f83b7f00f54f0b0c
   - enabled: 1
     path: Assets/Scenes/Electrical Folder/wires/Game Over.unity
     guid: 99ea731f523a5774fbdc27b4c2ba969f
   - enabled: 1
-    path: Assets/Scenes/MainMenu_PUN.unity
-    guid: 83ab84c1bd90c7e479a235437b944929
-  - enabled: 1
-    path: Assets/Scenes/Start/Start.unity
-    guid: b7972329ce64f4f4aa29eca4aa08dcd3
+    path: Assets/Scenes/Ending/Example_1_Basic Book.unity
+    guid: d3f5912676a6d8b4fa852d1305cd3814
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
