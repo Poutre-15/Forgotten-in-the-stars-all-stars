@@ -1,122 +1,120 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
+using Photon.Pun;
+using System.Collections;
 
-public class EnemyAI : MonoBehaviour
+public class EnemyAI : MonoBehaviourPun
 {
     public NavMeshAgent ai;
-    public List<Transform> destinations;
+    public Transform player; // Set to nearest player via Photon
     public Animator aiAnim;
-    public float walkSpeed, chaseSpeed, minIdleTime, maxIdleTime, idleTime, sightDistance, catchDistance, chaseTime, minChaseTime, maxChaseTime, jumpscareTime;
+    public float walkSpeed, chaseSpeed, sightDistance, catchDistance, jumpscareTime;
     public bool walking, chasing;
-    public Transform player;
-    Transform currentDest;
-    Vector3 dest;
-    int randNum;
-    public int destinationAmount;
-    public Vector3 rayCastOffset;
-    public string deathScene;
     public int health = 3;
+    public string deathScene;
     public GameObject cam;
 
     void Start()
     {
         walking = true;
-        randNum = Random.Range(0, destinations.Count);
-        currentDest = destinations[randNum];
+        if (!photonView.IsMine) return; // Only master client controls AI movement
     }
-    void Update()//replace player by a player getter to find the nearest player ?
+
+    void Update()
     {
+        if (!photonView.IsMine) return;
+
+        Transform nearestPlayer = FindNearestPlayer();
+        if (nearestPlayer != null) player = nearestPlayer;
+
         Vector3 direction = (player.position - transform.position).normalized;
         RaycastHit hit;
-        if (Physics.Raycast(transform.position + rayCastOffset, direction, out hit, sightDistance))
+        if (Physics.Raycast(transform.position, direction, out hit, sightDistance) && hit.collider.CompareTag("Player"))
         {
-            if (hit.collider.gameObject.tag == "Player")
-            {
-                walking = false;
-                StopCoroutine("stayIdle");
-                StopCoroutine("chaseRoutine");
-                StartCoroutine("chaseRoutine");
-                chasing = true;
-            }
+            walking = false;
+            StopCoroutine("chaseRoutine");
+            StartCoroutine("chaseRoutine");
+            chasing = true;
         }
-        if (chasing == true)
+
+        if (chasing)
         {
-            dest = player.position;
-            ai.destination = dest;
+            ai.destination = player.position;
             ai.speed = chaseSpeed;
-            aiAnim.ResetTrigger("walk");
-            aiAnim.ResetTrigger("idle");
             aiAnim.SetTrigger("sprint");
             float distance = Vector3.Distance(player.position, ai.transform.position);
             if (distance <= catchDistance)
             {
-                
-                player.gameObject.SetActive(false);
-                aiAnim.ResetTrigger("walk");
-                aiAnim.ResetTrigger("idle");
-                aiAnim.ResetTrigger("sprint");
-                aiAnim.SetTrigger("jumpscare");
-                StartCoroutine(deathRoutine());
+                photonView.RPC("KillPlayer", RpcTarget.All, player.GetComponent<PhotonView>().ViewID);
                 chasing = false;
             }
         }
-        if (walking == true)
+        else if (walking)
         {
-            dest = currentDest.position;
-            ai.destination = dest;
+            ai.destination = transform.position; // Idle or patrol (add destinations if needed)
             ai.speed = walkSpeed;
-            aiAnim.ResetTrigger("sprint");
-            aiAnim.ResetTrigger("idle");
             aiAnim.SetTrigger("walk");
-            if (ai.remainingDistance <= ai.stoppingDistance)
-            {
-                aiAnim.ResetTrigger("sprint");
-                aiAnim.ResetTrigger("walk");
-                aiAnim.SetTrigger("idle");
-                ai.speed = 0;
-                StopCoroutine("stayIdle");
-                StartCoroutine("stayIdle");
-                walking = false;
-            }
         }
-            
     }
+
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Bullet")) // If hit by bullet
+        if (collision.gameObject.CompareTag("Bullet"))
         {
-            health--;
-            Destroy(collision.gameObject); // Destroy bullet
-            if (health <= 0)
-            {
-                Destroy(gameObject); // Kill monster
-            }
+            photonView.RPC("TakeDamage", RpcTarget.All);
+            Destroy(collision.gameObject);
         }
     }
-    IEnumerator stayIdle()
+
+    [PunRPC]
+    void TakeDamage()
     {
-        idleTime = Random.Range(minIdleTime, maxIdleTime);
-        yield return new WaitForSeconds(idleTime);
-        walking = true;
-        randNum = Random.Range(0, destinations.Count);
-        currentDest = destinations[randNum];
+        health--;
+        if (health <= 0)
+        {
+            PhotonNetwork.Destroy(gameObject);
+        }
     }
+
+    [PunRPC]
+    void KillPlayer(int playerViewId)
+    {
+        PhotonView target = PhotonView.Find(playerViewId);
+        if (target != null)
+        {
+            target.gameObject.SetActive(false);
+            aiAnim.SetTrigger("jumpscare");
+            StartCoroutine(deathRoutine());
+        }
+    }
+
+    Transform FindNearestPlayer()
+    {
+        Transform nearest = null;
+        float minDist = Mathf.Infinity;
+        foreach (var player in GameObject.FindGameObjectsWithTag("Player"))
+        {
+            float dist = Vector3.Distance(transform.position, player.transform.position);
+            if (dist < minDist)
+            {
+                minDist = dist;
+                nearest = player.transform;
+            }
+        }
+        return nearest;
+    }
+
     IEnumerator chaseRoutine()
     {
-        chaseTime = Random.Range(minChaseTime, maxChaseTime);
-        yield return new WaitForSeconds(chaseTime);
+        yield return new WaitForSeconds(2f); // Adjust chase time
         walking = true;
         chasing = false;
-        randNum = Random.Range(0, destinations.Count);
-        currentDest = destinations[randNum];
     }
+
     IEnumerator deathRoutine()
     {
         yield return new WaitForSeconds(jumpscareTime);
         SceneManager.LoadScene(deathScene);
     }
-
 }
