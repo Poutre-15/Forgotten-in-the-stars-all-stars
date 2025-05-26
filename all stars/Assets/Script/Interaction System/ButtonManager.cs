@@ -7,7 +7,7 @@ public class ButtonManager : MonoBehaviour
     [SerializeField] private int totalButtons = 4;
     private int buttonsPressed = 0;
 
-    [SerializeField] private GameObject door; // The door to open
+    [SerializeField] private GameObject door; // The door to destroy
 
     private void Awake()
     {
@@ -24,17 +24,16 @@ public class ButtonManager : MonoBehaviour
         buttonsPressed++;
         if (buttonsPressed >= totalButtons)
         {
-            OpenDoor();
+            DestroyDoor();
         }
     }
 
-    private void OpenDoor()
+    private void DestroyDoor()
     {
-        Debug.Log("All buttons pressed! Door opens.");
+        Debug.Log("All buttons pressed! Door is destroyed.");
         if (door != null)
         {
-            // Simple open behavior (e.g. deactivate or move)
-            door.SetActive(false); // or play animation, move it, etc.
+            Destroy(door);
         }
     }
 }
