@@ -37243,7 +37243,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1012907337
 RectTransform:
   m_ObjectHideFlags: 0
@@ -37258,7 +37258,7 @@ RectTransform:
   m_Children:
   - {fileID: 587699364}
   - {fileID: 1311350166}
-  m_Father: {fileID: 1450368216921117742}
+  m_Father: {fileID: 3208469883837310940}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -76138,7 +76138,6 @@ Transform:
   - {fileID: 1897886683}
   - {fileID: 1027466297}
   - {fileID: 1098134730}
-  - {fileID: 1012907337}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!4 &1475095664156919700
@@ -83552,7 +83551,10 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 57404ea8e815841a085d8a96eef36643, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 400000, guid: d24ee0c737a474e4c92ebcacf4261d14, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1012907337}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 100000, guid: d24ee0c737a474e4c92ebcacf4261d14, type: 3}
       insertIndex: -1
@@ -83590,8 +83592,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.5158776, y: 0.8682965, z: 0.00000015270521}
-  m_Center: {x: -0.000000923872, y: 0.0000018775463, z: -4.927231e-16}
+  m_Size: {x: 0.5569937, y: 0.86829644, z: 0.5909289}
+  m_Center: {x: -0.02055897, y: 0.000028635208, z: -0.1110349}
 --- !u!114 &3208469883837310943
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -83604,7 +83606,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82103b3c81cedbe418311ef625bf0e6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetCanvas: {fileID: 0}
+  uiCanvas: {fileID: 1012907340}
 --- !u!33 &3209429628511032532
 MeshFilter:
   m_ObjectHideFlags: 10
