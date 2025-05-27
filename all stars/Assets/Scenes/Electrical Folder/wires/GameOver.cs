@@ -7,6 +7,6 @@ public class GameOver : MonoBehaviour
 {
     public void GameFinished()
     {
-        SceneManager.LoadSceneAsync(6);
+        SceneManager.LoadSceneAsync(4);
     }
 }
