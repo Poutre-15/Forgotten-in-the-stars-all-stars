@@ -8,13 +8,27 @@ public class InteractInteractWithNewspaper : MonoBehaviour
     void Start()
     {
         if (uiCanvas != null) uiCanvas.gameObject.SetActive(false);
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     void Update()
     {
         if (isPlayerInRange && Input.GetKeyDown(KeyCode.E))
         {
-            uiCanvas.gameObject.SetActive(!uiCanvas.gameObject.activeSelf);
+            bool show = !uiCanvas.gameObject.activeSelf;
+            uiCanvas.gameObject.SetActive(show);
+
+            if (show)
+            {
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
+            }
+            else
+            {
+                Cursor.visible = false;
+                Cursor.lockState = CursorLockMode.Locked;
+            }
         }
     }
 
@@ -32,6 +46,8 @@ public class InteractInteractWithNewspaper : MonoBehaviour
         {
             isPlayerInRange = false;
             if (uiCanvas != null) uiCanvas.gameObject.SetActive(false);
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
         }
     }
 }
