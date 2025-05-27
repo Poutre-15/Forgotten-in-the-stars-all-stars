@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class GameOver : MonoBehaviour
+public class GoBackToMenu : MonoBehaviour
 {
-    public void GameFinished()
+    public void BackToMenu()
     {
-        SceneManager.LoadSceneAsync(4);
+        SceneManager.LoadSceneAsync(0);
     }
 }
