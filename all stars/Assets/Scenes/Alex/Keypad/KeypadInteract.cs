@@ -12,19 +12,47 @@ public class KeypadInteract : MonoBehaviourPun
     public GameObject objectToRotate;
     [SerializeField] private float interactDistance = 3f;
     private Transform player;
-    [SerializeField] private string playerObjectName = "ActivationObject";
-    private FirstPersonController playerController; // Reference to FirstPersonController
+    [SerializeField] private string gunObjectName = "Gun"; // Matches the hierarchy
+    private FirstPersonController playerController;
+
+    [Header("Button à afficher si code correct")]
+    [SerializeField] private GameObject successButton;
 
     void Start()
     {
         keypadUI.SetActive(false);
-        player = GameObject.FindGameObjectWithTag("Player").transform;
-        playerController = player.GetComponent<FirstPersonController>(); // Get reference
+        if (successButton != null)
+            successButton.SetActive(false); // Hide the success button at start
+        StartCoroutine(FindPlayerCoroutine()); // Start coroutine to find player
+    }
+
+    System.Collections.IEnumerator FindPlayerCoroutine()
+    {
+        while (player == null)
+        {
+            GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+            foreach (GameObject p in players)
+            {
+                PhotonView pv = p.GetComponent<PhotonView>();
+                if (pv != null && pv.IsMine)
+                {
+                    player = p.transform;
+                    Debug.Log($"Local player found: {player.name}");
+                    playerController = player.GetComponent<FirstPersonController>();
+                    if (playerController == null)
+                    {
+                        Debug.LogError("FirstPersonController component not found on player!");
+                    }
+                    yield break;
+                }
+            }
+            yield return null;
+        }
     }
 
     void Update()
     {
-        if (!photonView.IsMine) return;
+        if (!photonView.IsMine || player == null) return;
 
         float distance = Vector3.Distance(player.position, transform.position);
         if (distance <= interactDistance && Input.GetKeyDown(KeyCode.E))
@@ -40,14 +68,13 @@ public class KeypadInteract : MonoBehaviourPun
 
     private void ToggleKeypad()
     {
-        if (!photonView.IsMine) return;
+        if (!photonView.IsMine || player == null) return;
 
         isKeypadActive = !isKeypadActive;
         keypadUI.SetActive(isKeypadActive);
         Cursor.lockState = isKeypadActive ? CursorLockMode.None : CursorLockMode.Locked;
         Cursor.visible = isKeypadActive;
 
-        // Toggle camera movement and cursor in FirstPersonController
         if (playerController != null)
         {
             playerController.ToggleCameraForKeypad(isKeypadActive);
@@ -59,11 +86,14 @@ public class KeypadInteract : MonoBehaviourPun
             UpdateDisplay();
         }
     }
-    
+
     public void OnNumberButtonPressed(string number)
     {
         if (photonView.IsMine && enteredCode.Length < correctCode.Length)
         {
+            enteredCode += number;
+            UpdateDisplay();
+
             photonView.RPC("RPC_NumberPressed", RpcTarget.AllBuffered, number);
         }
     }
@@ -71,8 +101,11 @@ public class KeypadInteract : MonoBehaviourPun
     [PunRPC]
     private void RPC_NumberPressed(string number)
     {
-        enteredCode += number;
-        UpdateDisplay();
+        if (!photonView.IsMine)
+        {
+            enteredCode += number;
+            UpdateDisplay();
+        }
 
         if (enteredCode.Length == correctCode.Length)
         {
@@ -107,6 +140,9 @@ public class KeypadInteract : MonoBehaviourPun
             Debug.Log("Code Correct!");
             photonView.RPC("RPC_CodeSuccess", RpcTarget.All);
             ToggleKeypad();
+
+            if (successButton != null)
+                successButton.SetActive(true);
         }
         else
         {
@@ -120,7 +156,7 @@ public class KeypadInteract : MonoBehaviourPun
     {
         Debug.Log("Code accepted on all clients!");
         RotateObject();
-        ActivateGun(); // Activate object in player prefab
+        ActivateGun();
     }
 
     void RotateObject()
@@ -134,22 +170,63 @@ public class KeypadInteract : MonoBehaviourPun
         objectToRotate.transform.rotation = Quaternion.Euler(0, -40, 0);
     }
 
-    [PunRPC]
     void ActivateGun()
     {
-        GameObject playerObj = PhotonNetwork.LocalPlayer.TagObject as GameObject;
-        if (playerObj != null)
+        // Recherche du joueur local (tag "Player" ou nom "FirstPersonController")
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        GameObject localPlayer = null;
+        foreach (GameObject p in players)
         {
-            GameObject targetObject = playerObj.transform.Find(playerObjectName)?.gameObject;
-            if (targetObject != null)
+            PhotonView pv = p.GetComponent<PhotonView>();
+            if (pv != null && pv.IsMine)
             {
-                targetObject.SetActive(true);
+                localPlayer = p;
+                break;
             }
-            else
+        }
+
+        if (localPlayer == null)
+        {
+            Debug.LogError("Local player not found in ActivateGun!");
+            return;
+        }
+
+        // Recherche de l'objet Gun dans la hiérarchie du joueur
+        Transform gunTransform = localPlayer.transform.Find(gunObjectName);
+        if (gunTransform != null)
+        {
+            gunTransform.gameObject.SetActive(true);
+            Debug.Log("Gun activated successfully!");
+
+            photonView.RPC("RPC_ActivateGun", RpcTarget.Others, localPlayer.GetComponent<PhotonView>().ViewID);
+        }
+        else
+        {
+            Debug.LogError("Gun object not found in player hierarchy!");
+        }
+    }
+
+    [PunRPC]
+    void RPC_ActivateGun(int playerViewID)
+    {
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        foreach (GameObject p in players)
+        {
+            PhotonView pv = p.GetComponent<PhotonView>();
+            if (pv != null && pv.ViewID == playerViewID)
             {
-                Debug.LogError("ActivationObject not found in player prefab!");
+                Transform gunTransform = p.transform.Find(gunObjectName);
+                if (gunTransform != null)
+                {
+                    gunTransform.gameObject.SetActive(true);
+                    Debug.Log("Gun activated on remote client!");
+                }
+                else
+                {
+                    Debug.LogError("Gun object not found on remote client!");
+                }
+                break;
             }
         }
     }
-   
 }
